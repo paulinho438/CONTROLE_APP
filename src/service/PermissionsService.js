@@ -1,0 +1,42 @@
+import store from '@/store';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+const apiPath = import.meta.env.VITE_APP_BASE_URL;
+
+export default class PermissionsService {
+    constructor() {
+        this.router = useRouter();
+    }
+
+    hasPermissions = (permission) => {
+        return store.getters?.permissions.includes(permission);
+    };
+
+    hasPermissionsView = (permission) => {
+        if (!store.getters?.permissions.includes(permission)) {
+            this.router.push({ name: 'accessDenied' });
+        }
+    };
+
+    get = async (id) => {
+        return await axios.get(`${apiPath}/permission_groups/${id}`);
+    };
+
+    getAll = async () => {
+        return await axios.get(`${apiPath}/permission_groups`);
+    };
+
+    getItems = async () => {
+        return await axios.get(`${apiPath}/permission_items`);
+    };
+
+    deletePermission = async (id) => {
+        return await axios.delete(`${apiPath}/permission_groups/${id}`);
+    };
+
+    save = async (permissions) => {
+        if (undefined === permissions.id) return await axios.post(`${apiPath}/permission_groups`, permissions);
+        else return await axios.put(`${apiPath}/permission_groups/${permissions.id}`, permissions);
+    };
+}
