@@ -89,10 +89,10 @@ onMounted(carregar);
                         <Tag :value="formatarStatus(data.status)" :severity="getStatusSeverity(data.status)" />
                     </template>
                 </Column>
-                <Column header="Grupos de Permissão">
+                <Column header="Grupo de Permissão">
                     <template #body="{ data }">
                         <span v-if="data.groups && data.groups.length > 0">
-                            {{ data.groups.map(g => g.name).join(', ') }}
+                            {{ data.groups[0].name }}
                         </span>
                         <span v-else class="text-color-secondary">Nenhum grupo</span>
                     </template>

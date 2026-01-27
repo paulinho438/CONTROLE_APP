@@ -21,7 +21,7 @@ const form = ref({
     email: '',
     password: '',
     status: 'A',
-    groups: []
+    group: null
 });
 
 const gruposDisponiveis = ref([]);
@@ -53,7 +53,7 @@ const carregarUsuario = async () => {
             email: usuario.email || '',
             password: '',
             status: usuario.status,
-            groups: usuario.groups ? usuario.groups.map(g => g.id) : []
+            group: usuario.groups && usuario.groups.length > 0 ? usuario.groups[0].id : null
         };
     } catch (error) {
         toast.add({ 
@@ -91,6 +91,14 @@ const salvar = async () => {
         if (isEdit.value && (!payload.password || payload.password.trim() === '')) {
             delete payload.password;
         }
+
+        // Converter group único para array groups (backend espera array)
+        if (payload.group !== null && payload.group !== undefined) {
+            payload.groups = [payload.group];
+        } else {
+            payload.groups = [];
+        }
+        delete payload.group;
 
         await userService.save(payload);
         toast.add({ 
@@ -184,19 +192,19 @@ onMounted(async () => {
                         optionValue="value"
                     />
                 </div>
-                <div class="col-12">
-                    <label class="block mb-2">Grupos de Permissão</label>
-                    <MultiSelect 
-                        v-model="form.groups" 
+                <div class="col-12 md:col-6">
+                    <label class="block mb-2">Grupo de Permissão</label>
+                    <Dropdown 
+                        v-model="form.group" 
                         :options="gruposDisponiveis" 
                         optionLabel="name" 
                         optionValue="id" 
                         class="w-full" 
-                        display="chip"
-                        placeholder="Selecione os grupos de permissão"
+                        placeholder="Selecione um grupo de permissão"
+                        :showClear="true"
                     />
                     <small class="text-color-secondary">
-                        Selecione um ou mais grupos de permissão para atribuir ao usuário
+                        Selecione um grupo de permissão para atribuir ao usuário
                     </small>
                 </div>
             </div>
