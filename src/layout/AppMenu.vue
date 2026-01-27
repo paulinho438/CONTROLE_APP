@@ -47,7 +47,10 @@ const model = ref([
     },
     {
         label: 'ADMINISTRAÇÃO',
-        items: [{ label: 'Permissões', icon: 'pi pi-fw pi-lock', to: '/permissoes', permission: 'permissoes.view' }]
+        items: [
+            { label: 'Permissões', icon: 'pi pi-fw pi-lock', to: '/permissoes', permission: 'permissoes.view' },
+            { label: 'Usuários', icon: 'pi pi-fw pi-user', to: '/usuarios', permission: 'usuarios.view' }
+        ]
     }
 ]);
 </script>
