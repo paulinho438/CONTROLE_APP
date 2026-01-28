@@ -140,12 +140,25 @@ const carregar = async () => {
 };
 
 const carregarRegistroAtual = () => {
-    if (saidaAtual.value) {
-        form.value = {
-            ...saidaAtual.value,
-            data_saida: saidaAtual.value.data_saida ? new Date(saidaAtual.value.data_saida) : null
-        };
-    }
+    if (!saidaAtual.value) return;
+    const s = saidaAtual.value;
+    form.value = {
+        id: s.id ?? null,
+        grupo_id: s.grupo_id != null ? Number(s.grupo_id) : null,
+        material_id: s.material_id != null ? Number(s.material_id) : null,
+        patio_id: s.patio_id != null ? Number(s.patio_id) : null,
+        destino_patio_id: s.destino_patio_id != null ? Number(s.destino_patio_id) : null,
+        tipo_movimentacao: s.tipo_movimentacao || 'Saída',
+        nota_fiscal: s.nota_fiscal ?? '',
+        valor: s.valor != null ? Number(s.valor) : null,
+        data_saida: s.data_saida ? new Date(s.data_saida) : null,
+        quantidade: s.quantidade != null ? Number(s.quantidade) : 1,
+        unidade_medida_id: s.unidade_medida_id != null ? Number(s.unidade_medida_id) : null,
+        numero_romaneio: s.numero_romaneio ?? '',
+        responsavel_colaborador_id: s.responsavel_colaborador_id != null ? Number(s.responsavel_colaborador_id) : null,
+        destino: s.destino ?? '',
+        observacao: s.observacao ?? ''
+    };
 };
 
 const novo = () => {
@@ -230,6 +243,8 @@ const editar = (item) => {
     if (index >= 0) {
         indiceAtual.value = index;
         carregarRegistroAtual();
+        mostrarHistorico.value = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
 

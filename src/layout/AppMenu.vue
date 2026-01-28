@@ -42,7 +42,8 @@ const model = ref([
             { label: 'Consultas', icon: 'pi pi-fw pi-search', to: '/consultas', permission: 'dashboard.view' },
             { label: 'Histórico Notas Fiscais', icon: 'pi pi-fw pi-history', to: '/historico-notas-fiscais', permission: 'notas-fiscais.view' },
             { label: 'Progresso Recebimento', icon: 'pi pi-fw pi-chart-pie', to: '/progresso-recebimento', permission: 'dashboard.view' },
-            { label: 'Saída e Transferência', icon: 'pi pi-fw pi-exchange', to: '/saida-transferencia', permission: 'saidas.view' }
+            { label: 'Saída e Transferência', icon: 'pi pi-fw pi-exchange', to: '/saida-transferencia', permission: 'saidas.view' },
+            { label: 'Consulta Romaneio', icon: 'pi pi-fw pi-file-edit', to: '/consulta-romaneio', permission: 'saidas.view' }
         ]
     },
     {
