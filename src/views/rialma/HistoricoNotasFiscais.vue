@@ -25,8 +25,9 @@ const notasFiltradas = computed(() => {
     }
 
     if (filtroNumero.value) {
-        resultado = resultado.filter(n => 
-            n.numero_nota?.toLowerCase().includes(filtroNumero.value.toLowerCase())
+        const busca = String(filtroNumero.value).toLowerCase().trim();
+        resultado = resultado.filter(n =>
+            String(n.numero_nota ?? '').toLowerCase().includes(busca)
         );
     }
 
@@ -56,8 +57,9 @@ const notasFiltradas = computed(() => {
 const carregar = async () => {
     loading.value = true;
     try {
+        const params = filtroNumero.value?.trim() ? { numero_nota: filtroNumero.value.trim() } : {};
         const [notasResp, fornecedoresResp] = await Promise.all([
-            service.getAll(),
+            service.getAll(params),
             fornecedorService.getAll()
         ]);
         notas.value = notasResp.data.data || [];
@@ -127,7 +129,10 @@ onMounted(carregar);
         <div class="grid mb-4">
             <div class="col-12 md:col-4">
                 <label class="block mb-2">Pesquisar nota fiscal</label>
-                <InputText v-model="filtroNumero" placeholder="Número da nota" class="w-full" />
+                <div class="flex gap-2">
+                    <InputText v-model="filtroNumero" placeholder="Número da nota" class="flex-1" @keyup.enter="carregar" />
+                    <Button label="Buscar" icon="pi pi-search" @click="carregar" />
+                </div>
             </div>
             <div class="col-12 md:col-4">
                 <label class="block mb-2">Fornecedor</label>

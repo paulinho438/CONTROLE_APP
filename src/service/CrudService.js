@@ -5,8 +5,8 @@ export default class CrudService {
 		this.domain = domain;
 	}
 
-	getAll = async () => {
-		return await axios.get(`${this.domain}`);
+	getAll = async (params = {}) => {
+		return await axios.get(`${this.domain}`, { params });
 	};
 
 	get = async (id) => {
