@@ -58,6 +58,7 @@ const imprimirRelatorio = () => {
                 material: material.material,
                 estoque_atual: material.total_recebido || 0,
                 previsto: material.estoque_previsto || 0,
+                saidas: material.total_saidas || 0,
                 diferenca: material.diferenca || 0
             });
         });
@@ -71,6 +72,7 @@ const imprimirRelatorio = () => {
             { field: 'material', header: 'Material' },
             { field: 'estoque_atual', header: 'Estoque Atual' },
             { field: 'previsto', header: 'Previsto' },
+            { field: 'saidas', header: 'Saídas' },
             { field: 'diferenca', header: 'Diferença' }
         ],
         'relatorio_balanco.pdf'
@@ -87,6 +89,7 @@ const exportarPlanilha = () => {
                 'Material': material.material,
                 'Estoque Atual': material.total_recebido || 0,
                 'Previsto': material.estoque_previsto || 0,
+                'Saídas': material.total_saidas || 0,
                 'Diferença': material.diferenca || 0
             });
         });
@@ -133,6 +136,7 @@ onMounted(async () => {
                 <Column field="material" header="Material" />
                 <Column field="estoque_previsto" header="Previsto" />
                 <Column field="total_recebido" header="Total Recebido" />
+                <Column field="total_saidas" header="Saídas" />
                 <Column field="diferenca" header="Diferença">
                     <template #body="{ data }">
                         <span :class="data.diferenca < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'">
