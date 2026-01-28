@@ -72,7 +72,9 @@ const podeAvançar = computed(() => indiceAtual.value >= 0 && indiceAtual.value 
 const mostrarDestinoPatio = computed(() => form.value.tipo_movimentacao === 'Transferência');
 
 watch(() => form.value.grupo_id, (novoGrupoId) => {
-    if (novoGrupoId) {
+    if (!novoGrupoId) return;
+    const materialDoGrupo = materiais.value.find(m => m.id === form.value.material_id);
+    if (!materialDoGrupo || Number(materialDoGrupo.grupo_id) !== Number(novoGrupoId)) {
         form.value.material_id = null;
     }
 });
