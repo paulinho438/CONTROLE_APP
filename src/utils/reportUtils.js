@@ -1,5 +1,5 @@
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 export const gerarPDF = (titulo, dados, colunas, nomeArquivo = 'relatorio.pdf') => {
@@ -31,8 +31,8 @@ export const gerarPDF = (titulo, dados, colunas, nomeArquivo = 'relatorio.pdf') 
             })
         );
         
-        // Usar autoTable para melhor formatação
-        doc.autoTable({
+        // Usar autoTable como função (forma correta para versão 5.x)
+        autoTable(doc, {
             startY: 30,
             head: [headers],
             body: rows,
