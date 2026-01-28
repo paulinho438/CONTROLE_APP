@@ -221,6 +221,30 @@ const imprimirRelatorio = () => {
     toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
 };
 
+const exportarExcelNotasFiscais = () => {
+    try {
+        const dados = notas.value.map(n => ({
+            'Fornecedor': n.fornecedor?.razao_social || n.razao_social || '',
+            'Número': n.numero_nota || '',
+            'CNPJ/CPF': n.cnpj_cpf || '',
+            'Data Emissão': n.data_emissao ? new Date(n.data_emissao).toLocaleDateString('pt-BR') : '',
+            'Data Recebimento': n.data_recebimento ? new Date(n.data_recebimento).toLocaleDateString('pt-BR') : '',
+            'Peso': n.peso_nota || 0,
+            'Valor': n.valor ? parseFloat(n.valor).toFixed(2) : '0.00'
+        }));
+
+        exportarExcel(dados, 'relatorio_notas_fiscais.xlsx', 'Notas Fiscais');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
+};
+
 onMounted(carregar);
 </script>
 
@@ -232,7 +256,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>NOTA FISCAL</h2>
-            <Button v-if="hasPermission('notas-fiscais.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('notas-fiscais.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('notas-fiscais.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelNotasFiscais" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

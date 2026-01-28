@@ -281,6 +281,30 @@ const imprimirRelatorio = () => {
     toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
 };
 
+const exportarExcelSaidas = () => {
+    try {
+        const dados = saidas.value.map(s => ({
+            'Material': s.material?.nome || '',
+            'Pátio': s.patio?.nome || '',
+            'Tipo': s.tipo_movimentacao || '',
+            'Quantidade': s.quantidade || 0,
+            'Unidade': s.unidade_medida?.unidade || '',
+            'Data Saída': s.data_saida ? new Date(s.data_saida).toLocaleDateString('pt-BR') : '',
+            'Destino': s.destino || s.destino_patio?.nome || ''
+        }));
+
+        exportarExcel(dados, 'relatorio_saidas.xlsx', 'Saídas');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
+};
+
 const materiaisFiltrados = computed(() => {
     if (!form.value.grupo_id) {
         console.log('Sem grupo selecionado, retornando todos os materiais:', materiais.value.length);
@@ -302,7 +326,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>SAÍDA DE MATERIAL</h2>
-            <Button v-if="hasPermission('saidas.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('saidas.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('saidas.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelSaidas" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

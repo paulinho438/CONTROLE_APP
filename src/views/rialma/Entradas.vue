@@ -324,31 +324,64 @@ const remover = async (item) => {
 };
 
 const imprimirRelatorio = () => {
-    const dados = entradas.value.map(e => ({
-        material: e.material?.nome || '',
-        patio: e.patio?.nome || '',
-        quantidade: e.quantidade || 0,
-        unidade: e.unidade_medida?.unidade || '',
-        fornecedor: e.fornecedor?.razao_social || '',
-        data_recebimento: e.data_recebimento ? new Date(e.data_recebimento).toLocaleDateString('pt-BR') : '',
-        valor: e.valor ? `R$ ${parseFloat(e.valor).toFixed(2)}` : 'R$ 0,00'
-    }));
+    try {
+        const dados = entradas.value.map(e => ({
+            material: e.material?.nome || '',
+            patio: e.patio?.nome || '',
+            quantidade: e.quantidade || 0,
+            unidade: e.unidade_medida?.unidade || '',
+            fornecedor: e.fornecedor?.razao_social || '',
+            data_recebimento: e.data_recebimento ? new Date(e.data_recebimento).toLocaleDateString('pt-BR') : '',
+            valor: e.valor ? `R$ ${parseFloat(e.valor).toFixed(2)}` : 'R$ 0,00'
+        }));
 
-    gerarPDF(
-        'RELATÓRIO DE ENTRADAS DE MATERIAL',
-        dados,
-        [
-            { field: 'material', header: 'Material' },
-            { field: 'patio', header: 'Pátio' },
-            { field: 'quantidade', header: 'Quantidade' },
-            { field: 'unidade', header: 'Unidade' },
-            { field: 'fornecedor', header: 'Fornecedor' },
-            { field: 'data_recebimento', header: 'Data Recebimento' },
-            { field: 'valor', header: 'Valor' }
-        ],
-        'relatorio_entradas.pdf'
-    );
-    toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+        gerarPDF(
+            'RELATÓRIO DE ENTRADAS DE MATERIAL',
+            dados,
+            [
+                { field: 'material', header: 'Material' },
+                { field: 'patio', header: 'Pátio' },
+                { field: 'quantidade', header: 'Quantidade' },
+                { field: 'unidade', header: 'Unidade' },
+                { field: 'fornecedor', header: 'Fornecedor' },
+                { field: 'data_recebimento', header: 'Data Recebimento' },
+                { field: 'valor', header: 'Valor' }
+            ],
+            'relatorio_entradas.pdf'
+        );
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao gerar relatório PDF', 
+            life: 3000 
+        });
+    }
+};
+
+const exportarExcelEntradas = () => {
+    try {
+        const dados = entradas.value.map(e => ({
+            'Material': e.material?.nome || '',
+            'Pátio': e.patio?.nome || '',
+            'Quantidade': e.quantidade || 0,
+            'Unidade': e.unidade_medida?.unidade || '',
+            'Fornecedor': e.fornecedor?.razao_social || '',
+            'Data Recebimento': e.data_recebimento ? new Date(e.data_recebimento).toLocaleDateString('pt-BR') : '',
+            'Valor': e.valor ? parseFloat(e.valor).toFixed(2) : '0.00'
+        }));
+
+        exportarExcel(dados, 'relatorio_entradas.xlsx', 'Entradas');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
 };
 
 const materiaisFiltrados = computed(() => {
@@ -372,7 +405,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>ENTRADA DE MATERIAL</h2>
-            <Button v-if="hasPermission('entradas.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('entradas.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('entradas.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelEntradas" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

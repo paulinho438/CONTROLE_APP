@@ -204,7 +204,7 @@ onMounted(carregar);
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>MATERIAL</h2>
             <div class="flex gap-2">
-                <Button v-if="hasPermission('materiais.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('materiais.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
                 <Button v-if="hasPermission('materiais.view')" label="Exportar planilha" icon="pi pi-file-excel" severity="success" @click="exportarPlanilha" />
             </div>
         </div>

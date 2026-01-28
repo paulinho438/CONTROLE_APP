@@ -292,6 +292,30 @@ const imprimirRelatorio = () => {
     toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
 };
 
+const exportarExcelTransferencias = () => {
+    try {
+        const dados = transferencias.value.map(t => ({
+            'Material': t.material?.nome || '',
+            'Pátio Origem': t.patio_origem?.nome || '',
+            'Pátio Destino': t.patio_destino?.nome || '',
+            'Quantidade': t.quantidade || 0,
+            'Unidade': t.unidade_medida?.unidade || '',
+            'Data Transferência': t.data_transferencia ? new Date(t.data_transferencia).toLocaleDateString('pt-BR') : '',
+            'Observação': t.observacao || ''
+        }));
+
+        exportarExcel(dados, 'relatorio_transferencias.xlsx', 'Transferências');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
+};
+
 const materiaisFiltrados = computed(() => {
     if (!form.value.grupo_id) {
         console.log('Sem grupo selecionado, retornando todos os materiais:', materiais.value.length);
@@ -313,7 +337,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>TRANSFERÊNCIA DE MATERIAL</h2>
-            <Button v-if="hasPermission('transferencias.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('transferencias.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('transferencias.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelTransferencias" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

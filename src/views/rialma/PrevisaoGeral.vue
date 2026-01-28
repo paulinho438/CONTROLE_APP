@@ -78,7 +78,7 @@ onMounted(carregar);
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>Previsão Geral</h2>
             <div class="flex gap-2">
-                <Button label="Imprimir" icon="pi pi-print" @click="imprimir" />
+                <Button label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimir" />
                 <Button label="Exportar planilha" icon="pi pi-file-excel" severity="success" @click="exportarPlanilha" />
             </div>
         </div>

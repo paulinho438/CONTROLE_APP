@@ -107,7 +107,7 @@ onMounted(async () => {
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>BALANÇO DE MATERIAL</h2>
             <div class="flex gap-2">
-                <Button label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+                <Button label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
                 <Button label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarPlanilha" />
             </div>
         </div>

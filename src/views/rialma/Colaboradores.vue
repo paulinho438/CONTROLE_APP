@@ -3,7 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import ColaboradorService from '@/service/ColaboradorService';
 import { useToast } from 'primevue/usetoast';
 import { usePermissions } from '@/composables/usePermissions';
-import { gerarPDF } from '@/utils/reportUtils';
+import { gerarPDF, exportarExcel } from '@/utils/reportUtils';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const toast = useToast();
@@ -133,25 +133,55 @@ const remover = async (item) => {
 };
 
 const imprimirRelatorio = () => {
-    const dados = colaboradores.value.map(c => ({
-        nome: c.nome_completo || '',
-        funcao: c.funcao || '',
-        departamento: c.departamento || '',
-        telefone: c.telefone || ''
-    }));
+    try {
+        const dados = colaboradores.value.map(c => ({
+            nome: c.nome_completo || '',
+            funcao: c.funcao || '',
+            departamento: c.departamento || '',
+            telefone: c.telefone || ''
+        }));
 
-    gerarPDF(
-        'RELATÓRIO DE COLABORADORES',
-        dados,
-        [
-            { field: 'nome', header: 'Nome' },
-            { field: 'funcao', header: 'Função' },
-            { field: 'departamento', header: 'Departamento' },
-            { field: 'telefone', header: 'Telefone' }
-        ],
-        'relatorio_colaboradores.pdf'
-    );
-    toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+        gerarPDF(
+            'RELATÓRIO DE COLABORADORES',
+            dados,
+            [
+                { field: 'nome', header: 'Nome' },
+                { field: 'funcao', header: 'Função' },
+                { field: 'departamento', header: 'Departamento' },
+                { field: 'telefone', header: 'Telefone' }
+            ],
+            'relatorio_colaboradores.pdf'
+        );
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao gerar relatório PDF', 
+            life: 3000 
+        });
+    }
+};
+
+const exportarExcelColaboradores = () => {
+    try {
+        const dados = colaboradores.value.map(c => ({
+            'Nome': c.nome_completo || '',
+            'Função': c.funcao || '',
+            'Departamento': c.departamento || '',
+            'Telefone': c.telefone || ''
+        }));
+
+        exportarExcel(dados, 'relatorio_colaboradores.xlsx', 'Colaboradores');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
 };
 
 onMounted(carregar);
@@ -165,7 +195,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>COLABORADOR</h2>
-            <Button v-if="hasPermission('colaboradores.view')" label="Imprimir" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('colaboradores.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('colaboradores.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelColaboradores" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

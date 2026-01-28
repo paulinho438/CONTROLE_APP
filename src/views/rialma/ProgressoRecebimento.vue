@@ -104,9 +104,9 @@ onMounted(async () => {
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>PROGRESSO DE RECEBIMENTO</h2>
             <div class="flex gap-2">
-                <Button label="Imprimir progresso" icon="pi pi-print" @click="imprimirProgresso" />
+                <Button label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirProgresso" />
                 <Button label="Exportar planilha" icon="pi pi-file-excel" severity="success" @click="exportarPlanilha" />
-                <Button label="Atualizar" icon="pi pi-refresh" @click="carregarProgresso" />
+                <Button label="Atualizar" icon="pi pi-refresh" severity="info" @click="carregarProgresso" />
             </div>
         </div>
 

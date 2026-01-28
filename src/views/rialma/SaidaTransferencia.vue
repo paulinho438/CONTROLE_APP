@@ -100,7 +100,7 @@ onMounted(carregar);
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>SAÍDA E TRANSFERÊNCIA DE MATERIAL</h2>
             <div class="flex gap-2">
-                <Button label="Imprimir" icon="pi pi-print" @click="imprimirRelatorio" />
+                <Button label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
                 <Button label="Exportar planilha" icon="pi pi-file-excel" severity="success" @click="exportarPlanilha" />
             </div>
         </div>

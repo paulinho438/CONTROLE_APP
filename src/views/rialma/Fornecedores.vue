@@ -183,6 +183,27 @@ const imprimirRelatorio = () => {
     toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
 };
 
+const exportarExcelFornecedores = () => {
+    try {
+        const dados = fornecedores.value.map(f => ({
+            'Razão Social': f.razao_social || '',
+            'CNPJ/CPF': f.cnpj_cpf || '',
+            'Cidade': f.cidade || '',
+            'Telefone': f.telefone || ''
+        }));
+
+        exportarExcel(dados, 'relatorio_fornecedores.xlsx', 'Fornecedores');
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Planilha exportada com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao exportar planilha', 
+            life: 3000 
+        });
+    }
+};
+
 onMounted(carregar);
 </script>
 
@@ -194,7 +215,10 @@ onMounted(carregar);
         <div v-else>
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>FORNECEDOR</h2>
-            <Button v-if="hasPermission('fornecedores.view')" label="Imprimir" icon="pi pi-print" @click="imprimirRelatorio" />
+            <div class="flex gap-2">
+                <Button v-if="hasPermission('fornecedores.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('fornecedores.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelFornecedores" />
+            </div>
         </div>
 
         <div class="grid align-items-end mb-4">

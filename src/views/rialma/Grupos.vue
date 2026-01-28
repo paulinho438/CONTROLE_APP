@@ -224,21 +224,30 @@ const remover = async (grupo) => {
 };
 
 const imprimirRelatorio = () => {
-    const dados = grupos.value.map(g => ({
-        grupo: g.nome || '',
-        data_cadastro: formatarData(g.data_cadastro || g.created_at)
-    }));
+    try {
+        const dados = grupos.value.map(g => ({
+            grupo: g.nome || '',
+            data_cadastro: formatarData(g.data_cadastro || g.created_at)
+        }));
 
-    gerarPDF(
-        'RELATÓRIO DE GRUPOS',
-        dados,
-        [
-            { field: 'grupo', header: 'Grupo' },
-            { field: 'data_cadastro', header: 'Data Cadastro' }
-        ],
-        'relatorio_grupos.pdf'
-    );
-    toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+        gerarPDF(
+            'RELATÓRIO DE GRUPOS',
+            dados,
+            [
+                { field: 'grupo', header: 'Grupo' },
+                { field: 'data_cadastro', header: 'Data Cadastro' }
+            ],
+            'relatorio_grupos.pdf'
+        );
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Relatório gerado com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: error.message || 'Erro ao gerar relatório PDF', 
+            life: 3000 
+        });
+    }
 };
 
 const exportarExcelGrupos = () => {
@@ -277,7 +286,7 @@ onMounted(carregar);
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>GRUPO</h2>
             <div class="flex gap-2">
-                <Button v-if="hasPermission('grupos.view')" label="Imprimir relatório" icon="pi pi-print" @click="imprimirRelatorio" />
+                <Button v-if="hasPermission('grupos.view')" label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="imprimirRelatorio" />
                 <Button v-if="hasPermission('grupos.view')" label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelGrupos" />
             </div>
         </div>

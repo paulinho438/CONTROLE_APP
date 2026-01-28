@@ -140,7 +140,7 @@ onMounted(async () => {
                 <div class="flex gap-2">
                     <Button label="Exportar PDF" icon="pi pi-file-pdf" severity="danger" @click="exportarPDF" />
                     <Button label="Exportar Excel" icon="pi pi-file-excel" severity="success" @click="exportarExcelResumo" />
-                    <Button label="Atualizar" icon="pi pi-refresh" @click="carregarResumoEstoque" />
+                    <Button label="Atualizar" icon="pi pi-refresh" severity="info" @click="carregarResumoEstoque" />
                 </div>
             </div>
         </div>
