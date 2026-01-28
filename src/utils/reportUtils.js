@@ -49,6 +49,73 @@ export const gerarPDF = (titulo, dados, colunas, nomeArquivo = 'relatorio.pdf') 
     }
 };
 
+export const gerarPDFRomaneio = (romaneio, nomeArquivo = 'romaneio.pdf') => {
+    try {
+        if (!romaneio || !romaneio.cabecalho) {
+            throw new Error('Não há dados do romaneio para gerar o PDF');
+        }
+
+        const doc = new jsPDF();
+        const cab = romaneio.cabecalho;
+        const formatarData = (data) => !data ? '' : new Date(data).toLocaleDateString('pt-BR');
+
+        let y = 15;
+
+        doc.setFontSize(16);
+        doc.text(`ROMANEIO N° ${cab.numero_romaneio || ''}`, 105, y, { align: 'center' });
+        y += 12;
+
+        doc.setFontSize(10);
+        doc.text(`Data da saída: ${formatarData(cab.data_saida)}`, 14, y);
+        doc.text(`Pátio: ${cab.patio || '-'}`, 105, y);
+        y += 7;
+        doc.text(`Destino: ${cab.destino || '-'}`, 14, y);
+        doc.text(`Tipo: ${cab.tipo_movimentacao || '-'}`, 105, y);
+        y += 14;
+
+        doc.setFontSize(11);
+        doc.text('Materiais e Quantidades', 14, y);
+        y += 6;
+
+        const headersMateriais = ['Material', 'Quantidade', 'Unidade'];
+        const rowsMateriais = (romaneio.materiais || []).map(m => [
+            m.material || '-',
+            String(m.quantidade ?? ''),
+            m.unidade_medida || '-'
+        ]);
+
+        autoTable(doc, {
+            startY: y,
+            head: [headersMateriais],
+            body: rowsMateriais.length ? rowsMateriais : [['Nenhum item', '', '']],
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [66, 139, 202] },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            margin: { left: 14, right: 14 }
+        });
+
+        y = doc.lastAutoTable.finalY + 16;
+
+        doc.setFontSize(11);
+        doc.text('Assinaturas', 14, y);
+        y += 10;
+
+        doc.setFontSize(9);
+        doc.text('Responsável', 14, y);
+        doc.text(cab.responsavel || '-', 14, y + 6);
+        doc.line(14, y + 12, 90, y + 12);
+
+        doc.text('Solicitante', 110, y);
+        doc.text(cab.grupo || '-', 110, y + 6);
+        doc.line(110, y + 12, 186, y + 12);
+
+        doc.save(nomeArquivo);
+    } catch (error) {
+        console.error('Erro ao gerar PDF do romaneio:', error);
+        throw error;
+    }
+};
+
 export const exportarExcel = (dados, nomeArquivo = 'relatorio.xlsx', nomeAba = 'Dados') => {
     try {
         // Validar se há dados

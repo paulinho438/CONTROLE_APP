@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import SaidaService from '@/service/SaidaService';
 import { useToast } from 'primevue/usetoast';
 import ProgressSpinner from 'primevue/progressspinner';
+import { gerarPDFRomaneio } from '@/utils/reportUtils';
 
 const toast = useToast();
 const service = new SaidaService();
@@ -39,12 +40,33 @@ const formatarData = (data) => {
     if (!data) return '';
     return new Date(data).toLocaleDateString('pt-BR');
 };
+
+const baixarPDF = () => {
+    if (!romaneio.value || !romaneio.value.cabecalho) {
+        toast.add({ severity: 'warn', summary: 'Atenção', detail: 'Busque um romaneio antes de exportar o PDF', life: 3000 });
+        return;
+    }
+    try {
+        const nomeArquivo = `romaneio_${romaneio.value.cabecalho?.numero_romaneio || 'consulta'}.pdf`;
+        gerarPDFRomaneio(romaneio.value, nomeArquivo);
+        toast.add({ severity: 'success', summary: 'Sucesso', detail: 'PDF gerado com sucesso', life: 3000 });
+    } catch (error) {
+        toast.add({ severity: 'error', summary: 'Erro', detail: error.message || 'Erro ao gerar PDF', life: 3000 });
+    }
+};
 </script>
 
 <template>
     <div class="card">
         <div class="flex justify-content-between align-items-center mb-4">
             <h2>CONSULTA DE ROMANEIO</h2>
+            <Button 
+                v-if="romaneio && romaneio.cabecalho" 
+                label="Exportar PDF" 
+                icon="pi pi-file-pdf" 
+                severity="danger" 
+                @click="baixarPDF" 
+            />
         </div>
 
         <div class="grid mb-4">
