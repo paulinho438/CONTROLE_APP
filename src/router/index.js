@@ -30,6 +30,7 @@ const router = createRouter({
                 { path: '/historico-notas-fiscais', name: 'historico-notas-fiscais', component: () => import('@/views/rialma/HistoricoNotasFiscais.vue') },
                 { path: '/progresso-recebimento', name: 'progresso-recebimento', component: () => import('@/views/rialma/ProgressoRecebimento.vue') },
                 { path: '/saida-transferencia', name: 'saida-transferencia', component: () => import('@/views/rialma/SaidaTransferencia.vue') },
+                { path: '/consulta-romaneio', name: 'consulta-romaneio', component: () => import('@/views/rialma/ConsultaRomaneio.vue') },
                 { path: '/permissoes', name: 'permissionsList', component: () => import('@/views/permissions/PermissionsList.vue') },
                 { path: '/usuarios', name: 'usuarioList', component: () => import('@/views/usuarios/UsuarioList.vue') },
                 { path: '/usuarios/add', name: 'usuarioAdd', component: () => import('@/views/usuarios/UsuarioForm.vue') },
