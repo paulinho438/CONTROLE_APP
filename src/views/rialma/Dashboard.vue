@@ -8,6 +8,7 @@ import { gerarPDF, exportarExcel } from '@/utils/reportUtils';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const toast = useToast();
+const tituloSistema = import.meta.env.VITE_TITULO_SISTEMA || 'CONTROLE DE MATERIAL - SUBESTAÇÃO';
 const dashboardService = new DashboardService();
 const grupoService = new GrupoService();
 const patioService = new PatioService();
@@ -134,7 +135,7 @@ onMounted(async () => {
         <div class="col-12">
             <div class="flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 class="m-0">CONTROLE DE MATERIAL - SUBESTAÇÃO</h2>
+                    <h2 class="m-0">{{ tituloSistema }}</h2>
                     <small>Rialma Transmissora de Energia</small>
                 </div>
                 <div class="flex gap-2">
