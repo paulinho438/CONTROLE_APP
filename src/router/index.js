@@ -26,6 +26,7 @@ const router = createRouter({
                 { path: '/previsoes', name: 'previsoes', component: () => import('@/views/rialma/Previsoes.vue') },
                 { path: '/previsao-geral', name: 'previsao-geral', component: () => import('@/views/rialma/PrevisaoGeral.vue') },
                 { path: '/previsao-por-patio', name: 'previsao-por-patio', component: () => import('@/views/rialma/PrevisaoPatio.vue') },
+                { path: '/importar-excel', name: 'importar-excel', component: () => import('@/views/parametrizacao/ImportExcel.vue') },
                 { path: '/consultas', name: 'consultas', component: () => import('@/views/rialma/Consultas.vue') },
                 { path: '/historico-notas-fiscais', name: 'historico-notas-fiscais', component: () => import('@/views/rialma/HistoricoNotasFiscais.vue') },
                 { path: '/progresso-recebimento', name: 'progresso-recebimento', component: () => import('@/views/rialma/ProgressoRecebimento.vue') },
